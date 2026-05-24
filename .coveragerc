@@ -1,0 +1,16 @@
+[run]
+source = src
+branch = True
+omit =
+    test/*
+    */__init__.py
+    src/app_factory.py
+    src/config.py
+
+[report]
+show_missing = True
+skip_covered = False
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
+    if __name__ == .__main__.:
