@@ -1,0 +1,53 @@
+import json
+import re
+
+from src.models.issue import Issue, Severity
+from src.models.review_result import QualityScore, ReviewResult
+
+_FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
+
+
+class ParseError(Exception):
+    pass
+
+
+class ResponseParser:
+
+    def parse(self, raw: str) -> ReviewResult:
+        cleaned = _FENCE.sub("", raw).strip()
+        try:
+            data = json.loads(cleaned)
+        except json.JSONDecodeError as e:
+            raise ParseError(f"Invalid JSON from LLM: {e}") from e
+        return self._to_result(data)
+
+    def _to_result(self, data: dict) -> ReviewResult:
+        try:
+            issues = [self._to_issue(item) for item in data.get("issues", [])]
+            score_data = data["score"]
+            score = QualityScore(
+                solid=score_data["solid"],
+                testability=score_data["testability"],
+                readability=score_data["readability"],
+                coverage_estimate=score_data["coverage_estimate"],
+            )
+            return ReviewResult(
+                verdict=data["verdict"],
+                issues=issues,
+                missing_tests=data.get("missing_tests", []),
+                refactor_suggestion=data.get("refactor_suggestion", ""),
+                score=score,
+            )
+        except KeyError as e:
+            raise ParseError(f"Missing field in LLM response: {e}") from e
+
+    @staticmethod
+    def _to_issue(item: dict) -> Issue:
+        return Issue(
+            severity=Severity(item["severity"]),
+            category=item["category"],
+            location=item["location"],
+            problem=item["problem"],
+            why_it_hurts=item["why_it_hurts"],
+            fix=item["fix"],
+        )
