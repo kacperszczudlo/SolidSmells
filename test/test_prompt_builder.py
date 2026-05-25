@@ -31,3 +31,14 @@ class TestPromptBuilder(unittest.TestCase):
         req = ReviewRequest(code="x = 1", mode=ReviewMode.SOLID)
         prompt = self.builder.user_prompt(req)
         self.assertIn("SOLID", prompt)
+
+    def test_should_include_javascript_language_in_user_prompt(self):
+        # Arrange
+        req = ReviewRequest(code="const x = 1;", language="javascript")
+
+        # Act
+        prompt = self.builder.user_prompt(req)
+
+        # Assert
+        self.assertIn("JavaScript", prompt)
+        self.assertIn("const x = 1;", prompt)

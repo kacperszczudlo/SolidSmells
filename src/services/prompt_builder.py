@@ -47,6 +47,11 @@ MODE_LABELS = {
     ReviewMode.COMBINED: "SOLID + Code Smells (pełny audyt)",
 }
 
+LANGUAGE_LABELS = {
+    "python": "Python",
+    "javascript": "JavaScript",
+}
+
 
 class PromptBuilder:
     def system_instruction(self) -> str:
@@ -54,9 +59,10 @@ class PromptBuilder:
 
     def user_prompt(self, req: ReviewRequest) -> str:
         mode_text = MODE_LABELS[req.mode]
+        language_text = LANGUAGE_LABELS.get(req.language, req.language)
         return (
             f"Tryb analizy: {mode_text}\n"
-            f"Język kodu: {req.language}\n"
+            f"Język kodu: {language_text}\n"
             f"---KOD POCZĄTEK---\n{req.code}\n---KOD KONIEC---\n"
             "Zwróć JSON zgodnie ze schematem w instrukcji systemowej."
         )
