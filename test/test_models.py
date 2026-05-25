@@ -1,6 +1,7 @@
 import unittest
 
 from src.models.issue import Issue, Severity
+from src.models.review_result import QualityScore, ReviewResult
 
 
 class TestIssue(unittest.TestCase):
@@ -33,3 +34,56 @@ class TestIssue(unittest.TestCase):
                 why_it_hurts="x",
                 fix="y",
             )
+
+
+class TestReviewResult(unittest.TestCase):
+
+    def test_should_return_empty_issues_when_none_provided(self):
+        # Arrange
+        score = QualityScore(
+            solid=5,
+            testability=5,
+            readability=5,
+            coverage_estimate=90,
+        )
+
+        # Act
+        result = ReviewResult(
+            verdict="OK",
+            issues=[],
+            score=score,
+            missing_tests=[],
+            refactor_suggestion="",
+        )
+
+        # Assert
+        self.assertEqual(result.issues, [])
+
+    def test_should_count_critical_issues(self):
+        # Arrange
+        crit = Issue(
+            severity=Severity.CRITICAL,
+            category="X",
+            location="a:1",
+            problem="P",
+            why_it_hurts="W",
+            fix="F",
+        )
+        score = QualityScore(
+            solid=3,
+            testability=3,
+            readability=3,
+            coverage_estimate=50,
+        )
+
+        # Act
+        result = ReviewResult(
+            verdict="x",
+            issues=[crit, crit],
+            score=score,
+            missing_tests=[],
+            refactor_suggestion="",
+        )
+
+        # Assert
+        self.assertEqual(result.count_critical(), 2)
