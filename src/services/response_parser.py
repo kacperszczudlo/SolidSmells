@@ -11,10 +11,14 @@ class ParseError(Exception):
     pass
 
 
+def _strip_fences(raw: str) -> str:
+    return _FENCE.sub("", raw).strip()
+
+
 class ResponseParser:
 
     def parse(self, raw: str) -> ReviewResult:
-        cleaned = _FENCE.sub("", raw).strip()
+        cleaned = _strip_fences(raw)
         if not cleaned:
             raise ParseError("Empty response from LLM")
         try:
