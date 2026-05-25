@@ -1,6 +1,7 @@
 import unittest
 
 from src.models.issue import Issue, Severity
+from src.models.review_request import ReviewRequest, ReviewMode
 from src.models.review_result import QualityScore, ReviewResult
 
 
@@ -87,3 +88,14 @@ class TestReviewResult(unittest.TestCase):
 
         # Assert
         self.assertEqual(result.count_critical(), 2)
+
+
+class TestReviewRequest(unittest.TestCase):
+
+    def test_should_default_to_combined_mode(self):
+        req = ReviewRequest(code="print('x')")
+        self.assertEqual(req.mode, ReviewMode.COMBINED)
+
+    def test_should_raise_when_code_is_empty(self):
+        with self.assertRaises(ValueError):
+            ReviewRequest(code="")
