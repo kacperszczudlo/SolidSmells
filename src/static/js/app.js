@@ -1,12 +1,18 @@
 const $ = (id) => document.getElementById(id);
 
-$("analyze").addEventListener("click", async () => {
+$("analyze").addEventListener("click", analyze);
+
+async function analyze() {
   const code = $("code").value.trim();
   const mode = $("mode").value;
-  if (!code) return showError("Wklej kod do analizy.");
+  if (!code) {
+    showError("Wklej kod do analizy.");
+    return;
+  }
 
   toggleLoading(true);
   hideError();
+  $("results").hidden = true;
 
   try {
     const res = await fetch("/api/review", {
@@ -15,22 +21,26 @@ $("analyze").addEventListener("click", async () => {
       body: JSON.stringify({ code, mode }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Błąd serwera");
+    if (!res.ok) {
+      throw new Error(data.error || `Błąd serwera (${res.status})`);
+    }
     render(data);
   } catch (e) {
     showError(e.message);
   } finally {
     toggleLoading(false);
   }
-});
+}
 
 function render(data) {
   $("verdict").textContent = data.verdict;
   $("score").innerHTML = scoreHTML(data.score);
-  $("issues").innerHTML = (data.issues || []).map(issueHTML).join("");
+  $("issues").innerHTML =
+    (data.issues || []).map(issueHTML).join("") ||
+    '<li class="issue issue--nit">Brak zgłoszonych problemów.</li>';
   $("missing-tests").innerHTML = (data.missing_tests || [])
     .map((t) => `<li>${escape(t)}</li>`)
-    .join("");
+    .join("") || "<li>—</li>";
   $("refactor").textContent = data.refactor_suggestion || "Brak sugestii.";
   $("results").hidden = false;
 }
@@ -39,7 +49,7 @@ const ICONS = { critical: "🔴", warning: "🟡", nit: "🟢" };
 
 function issueHTML(i) {
   return `<li class="issue issue--${i.severity}">
-    <header>${ICONS[i.severity]} <strong>${escape(i.category)}</strong>
+    <header>${ICONS[i.severity] || ""} <strong>${escape(i.category)}</strong>
       <small>${escape(i.location)}</small></header>
     <p><strong>Problem:</strong> ${escape(i.problem)}</p>
     <p><strong>Dlaczego boli:</strong> ${escape(i.why_it_hurts)}</p>
@@ -48,18 +58,23 @@ function issueHTML(i) {
 }
 
 function scoreHTML(s) {
-  return ["solid", "testability", "readability"]
-    .map((k) => `<span class="badge">${k.toUpperCase()}: ${s[k]}/5</span>`)
-    .join(" ") + ` <span class="badge">COVERAGE: ${s.coverage_estimate}%</span>`;
+  if (!s) return "";
+  const keys = ["solid", "testability", "readability"];
+  return (
+    keys
+      .map((k) => `<span class="badge">${k.toUpperCase()}: ${s[k]}/5</span>`)
+      .join(" ") +
+    ` <span class="badge">COVERAGE: ${s.coverage_estimate}%</span>`
+  );
 }
 
 function escape(s) {
   return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
-function toggleLoading(b) {
-  $("loading").hidden = !b;
-  $("analyze").disabled = b;
+function toggleLoading(on) {
+  $("loading").hidden = !on;
+  $("analyze").disabled = on;
 }
 
 function showError(msg) {
