@@ -15,6 +15,8 @@ class ResponseParser:
 
     def parse(self, raw: str) -> ReviewResult:
         cleaned = _FENCE.sub("", raw).strip()
+        if not cleaned:
+            raise ParseError("Empty response from LLM")
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
@@ -43,8 +45,12 @@ class ResponseParser:
 
     @staticmethod
     def _to_issue(item: dict) -> Issue:
+        try:
+            severity = Severity(item["severity"])
+        except ValueError as e:
+            raise ParseError(f"Invalid severity in LLM response: {item['severity']}") from e
         return Issue(
-            severity=Severity(item["severity"]),
+            severity=severity,
             category=item["category"],
             location=item["location"],
             problem=item["problem"],
