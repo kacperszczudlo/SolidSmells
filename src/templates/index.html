@@ -1,1 +1,43 @@
-<!doctype html><html lang="pl"><body><p>SolidSmells</p></body></html>
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>SolidSmells — audyt SOLID & Code Smells</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Asystent AI — audyt jakości kodu</h1>
+    <p>Wklej fragment Pythona — wykryję naruszenia SOLID i Code Smells.</p>
+  </header>
+
+  <main>
+    <section class="input-panel">
+      <label>Tryb analizy:
+        <select id="mode">
+          <option value="combined" selected>SOLID + Code Smells</option>
+          <option value="solid">Tylko SOLID</option>
+          <option value="smells">Tylko Code Smells</option>
+        </select>
+      </label>
+      <textarea id="code" placeholder="Wklej kod tutaj..." spellcheck="false"></textarea>
+      <button id="analyze">Analizuj</button>
+    </section>
+
+    <section class="result-panel" id="results" hidden>
+      <h2 id="verdict"></h2>
+      <div class="score" id="score"></div>
+      <ul id="issues"></ul>
+      <h3>Brakujące testy</h3>
+      <ul id="missing-tests"></ul>
+      <h3>Propozycja refaktoryzacji</h3>
+      <pre><code id="refactor"></code></pre>
+    </section>
+  </main>
+
+  <div id="loading" hidden>Analizuję...</div>
+  <div id="error" class="error" hidden></div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
