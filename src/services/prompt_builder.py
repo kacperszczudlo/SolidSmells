@@ -41,24 +41,22 @@ Reguły:
 - Odpowiedź to WYŁĄCZNIE JSON, bez komentarzy i markdown.
 """
 
+MODE_LABELS = {
+    ReviewMode.SOLID: "tylko SOLID",
+    ReviewMode.SMELLS: "tylko Code Smells",
+    ReviewMode.COMBINED: "SOLID + Code Smells (pełny audyt)",
+}
+
 
 class PromptBuilder:
     def system_instruction(self) -> str:
         return SYSTEM_INSTRUCTION
 
     def user_prompt(self, req: ReviewRequest) -> str:
-        mode_text = self._mode_label(req.mode)
+        mode_text = MODE_LABELS[req.mode]
         return (
             f"Tryb analizy: {mode_text}\n"
             f"Język kodu: {req.language}\n"
             f"---KOD POCZĄTEK---\n{req.code}\n---KOD KONIEC---\n"
             "Zwróć JSON zgodnie ze schematem w instrukcji systemowej."
         )
-
-    @staticmethod
-    def _mode_label(mode: ReviewMode) -> str:
-        return {
-            ReviewMode.SOLID: "tylko SOLID",
-            ReviewMode.SMELLS: "tylko Code Smells",
-            ReviewMode.COMBINED: "SOLID + Code Smells (pełny audyt)",
-        }[mode]
