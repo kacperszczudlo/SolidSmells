@@ -38,3 +38,11 @@ class TestReviewController(unittest.TestCase):
         self.client.post("/api/review", json={"code": "x=1", "mode": "solid"})
         called_with = self.service.analyze.call_args.args[0]
         self.assertEqual(called_with.mode.value, "solid")
+
+    def test_should_return_502_when_llm_response_is_malformed(self):
+        from src.services.response_parser import ParseError
+
+        self.service.analyze.side_effect = ParseError("Invalid JSON from LLM")
+        response = self.client.post("/api/review", json={"code": "x = 1"})
+        self.assertEqual(response.status_code, 502)
+        self.assertIn("malformed", response.get_json()["error"])
