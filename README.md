@@ -1,5 +1,13 @@
 # SolidSmells — Asystent AI (SOLID & Code Smells)
 
+![Python](https://img.shields.io/badge/Language-Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Web-Flask-000000?style=flat-square&logo=flask&logoColor=white)
+![Gemini](https://img.shields.io/badge/AI-Google%20Gemini-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
+![unittest](https://img.shields.io/badge/Tests-unittest-007396?style=flat-square)
+![Coverage](https://img.shields.io/badge/Coverage-98%25-4C1?style=flat-square)
+![HTML5](https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-E34F26?style=flat-square&logo=html5&logoColor=white)
+![TDD](https://img.shields.io/badge/Methodology-TDD-97CA00?style=flat-square)
+
 Aplikacja webowa analizująca fragment kodu **Pythona** pod kątem naruszeń zasad **SOLID** i **Code Smells**, z wykorzystaniem **Google Gemini API**.
 
 Projekt zrealizowany w ramach kursu *Testowanie oprogramowania i dokumentacja* — historia commitów odzwierciedla cykle **TDD (RED → GREEN → REFACTOR)**.
