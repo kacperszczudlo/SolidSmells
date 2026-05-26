@@ -1,0 +1,12 @@
+{
+  "verdict": "Przykładowa odpowiedź testowa",
+  "issues": [],
+  "missing_tests": [],
+  "refactor_suggestion": "",
+  "score": {
+    "solid": 5,
+    "testability": 5,
+    "readability": 5,
+    "coverage_estimate": 90
+  }
+}
