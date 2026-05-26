@@ -6,7 +6,6 @@ from src.models.review_result import QualityScore, ReviewResult
 
 
 class TestIssue(unittest.TestCase):
-
     def test_should_create_issue_with_all_fields(self):
         # Arrange
         severity, category = Severity.CRITICAL, "SOLID/SRP"
@@ -38,7 +37,6 @@ class TestIssue(unittest.TestCase):
 
 
 class TestReviewResult(unittest.TestCase):
-
     def test_should_return_empty_issues_when_none_provided(self):
         # Arrange
         score = QualityScore(
@@ -91,7 +89,6 @@ class TestReviewResult(unittest.TestCase):
 
 
 class TestReviewRequest(unittest.TestCase):
-
     def test_should_default_to_combined_mode(self):
         req = ReviewRequest(code="print('x')")
         self.assertEqual(req.mode, ReviewMode.COMBINED)

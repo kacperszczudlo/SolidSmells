@@ -16,7 +16,6 @@ def _strip_fences(raw: str) -> str:
 
 
 class ResponseParser:
-
     def parse(self, raw: str) -> ReviewResult:
         cleaned = _strip_fences(raw)
         if not cleaned:
@@ -52,7 +51,9 @@ class ResponseParser:
         try:
             severity = Severity(item["severity"])
         except ValueError as e:
-            raise ParseError(f"Invalid severity in LLM response: {item['severity']}") from e
+            raise ParseError(
+                f"Invalid severity in LLM response: {item['severity']}"
+            ) from e
         return Issue(
             severity=severity,
             category=item["category"],

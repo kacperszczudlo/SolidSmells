@@ -2,7 +2,6 @@ import json
 import unittest
 
 from src.app_factory import create_app
-from src.models.review_request import ReviewRequest
 from src.services.prompt_builder import PromptBuilder
 from src.services.response_parser import ResponseParser
 from src.services.review_service import ReviewService
@@ -29,7 +28,6 @@ class FakeLlmClient:
 
 
 class TestIntegration(unittest.TestCase):
-
     def setUp(self):
         service = ReviewService(PromptBuilder(), FakeLlmClient(), ResponseParser())
         self.client = create_app(review_service=service).test_client()

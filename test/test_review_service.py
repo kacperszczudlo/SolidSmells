@@ -25,7 +25,6 @@ VALID_JSON = json.dumps(
 
 
 class TestReviewService(unittest.TestCase):
-
     def test_should_call_llm_with_system_instruction_and_user_prompt(self):
         # Arrange
         mock_llm = Mock(spec=LlmClient)

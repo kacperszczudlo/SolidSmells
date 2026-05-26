@@ -6,7 +6,6 @@ from src.services.response_parser import ResponseParser
 
 
 class ReviewService:
-
     def __init__(
         self,
         builder: PromptBuilder,

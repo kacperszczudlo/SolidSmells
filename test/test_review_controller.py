@@ -7,7 +7,6 @@ from src.services.review_service import ReviewService
 
 
 class TestReviewController(unittest.TestCase):
-
     def setUp(self):
         self.service = Mock(spec=ReviewService)
         self.service.analyze.return_value = ReviewResult(

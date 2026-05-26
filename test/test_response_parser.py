@@ -18,7 +18,6 @@ VALID = {
 
 
 class TestResponseParser(unittest.TestCase):
-
     def setUp(self):
         self.parser = ResponseParser()
 

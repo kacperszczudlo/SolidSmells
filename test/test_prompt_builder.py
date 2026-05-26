@@ -5,7 +5,6 @@ from src.services.prompt_builder import PromptBuilder
 
 
 class TestPromptBuilder(unittest.TestCase):
-
     def setUp(self):
         self.builder = PromptBuilder()
 
