@@ -1,6 +1,52 @@
 const $ = (id) => document.getElementById(id);
 
+const EXAMPLES = {
+  "god-class": `class ReportGod:
+    def __init__(self, data):
+        self.data = data
+    def load(self, path):
+        self.data = open(path).read()
+    def parse(self):
+        return self.data.split(",")
+    def validate(self):
+        return len(self.data) > 0
+    def export_pdf(self): pass
+    def export_csv(self): pass
+    def send_email(self): pass
+`,
+  "long-method": `def calculate_invoice(items, tax, discount, shipping, currency):
+    total = 0
+    for i in items:
+        total += i * 1.23 * 0.97 + 42
+    if discount > 0:
+        total = total - discount * 1.15
+    total += shipping * 3.14
+    if currency == "EUR":
+        total *= 4.32
+    return total
+`,
+  "switch-type": `def area(shape, a, b=None):
+    if shape == "circle":
+        return 3.14 * a * a
+    elif shape == "rect":
+        return a * b
+    elif shape == "triangle":
+        return a * b / 2
+    else:
+        raise ValueError("unknown")
+`,
+};
+
 $("analyze").addEventListener("click", analyze);
+
+document.querySelectorAll("[data-example]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const key = btn.getAttribute("data-example");
+    $("code").value = EXAMPLES[key] || "";
+    hideError();
+    $("results").hidden = true;
+  });
+});
 
 async function analyze() {
   const code = $("code").value.trim();
